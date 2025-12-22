@@ -13,7 +13,6 @@ public class Appointment {
         this.date = date;
     }
 
-    // Геттеры и Сеттеры (Обязательно для 12 баллов)
     public int getAppointmentId() { return appointmentId; }
     public void setAppointmentId(int appointmentId) { this.appointmentId = appointmentId; }
 
@@ -26,7 +25,6 @@ public class Appointment {
     public String getDate() { return date; }
     public void setDate(String date) { this.date = date; }
 
-    // Методы с логикой
     public void reschedule(String newDate) {
         this.date = newDate;
     }

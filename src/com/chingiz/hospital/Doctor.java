@@ -13,15 +13,12 @@ public class Doctor {
         this.experienceYears = experienceYears;
     }
 
-    // ДОБАВЬТЕ ЭТОТ МЕТОД:
     public String getSpecialization() {
         return specialization;
     }
 
-    // И остальные геттеры, если их нет:
     public String getName() { return name; }
 
-    // toString метод...
     @Override
     public String toString() {
         return "Doctor{Name='" + name + "', Specialization='" + specialization + "'}";
