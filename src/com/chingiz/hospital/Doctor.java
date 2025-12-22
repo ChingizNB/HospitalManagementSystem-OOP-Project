@@ -3,7 +3,7 @@ package com.chingiz.hospital;
 public class Doctor {
     private int doctorId;
     private String name;
-    private String specialization; // Это поле должно быть здесь
+    private String specialization; // Это поле должно быть
     private int experienceYears;
 
     public Doctor(int doctorId, String name, String specialization, int experienceYears) {
