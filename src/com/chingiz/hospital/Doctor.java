@@ -8,12 +8,12 @@ public class Doctor extends Person {
         this.specialization = specialization;
     }
 
-    @Override // Переопределение 1
+    @Override
     public void performDuty() {
         System.out.println("Doctor " + name + " is treating patients in " + specialization);
     }
 
-    @Override // Переопределение 2
+    @Override 
     public String toString() {
         return "Doctor: " + name + " | Spec: " + specialization + " | Age: " + age;
     }
