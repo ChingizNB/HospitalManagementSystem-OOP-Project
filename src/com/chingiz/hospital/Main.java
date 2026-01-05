@@ -5,11 +5,11 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        // ArrayList<ParentType> (7 баллов)
+        
         ArrayList<Person> hospitalList = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
 
-        while (true) { // Консольное меню (5 баллов)
+        while (true) { 
             System.out.println("\n--- Hospital Management System ---");
             System.out.println("1. Add Doctor");
             System.out.println("2. Add Nurse");
@@ -18,7 +18,7 @@ public class Main {
             System.out.print("Choice: ");
 
             int choice = scanner.nextInt();
-            scanner.nextLine(); // очистка буфера
+            scanner.nextLine(); 
 
             if (choice == 1) {
                 System.out.print("Name: "); String name = scanner.nextLine();
@@ -32,12 +32,12 @@ public class Main {
                 System.out.print("Shift Hours: "); int shift = scanner.nextInt();
                 hospitalList.add(new Nurse(name, age, shift));
             } else if (choice == 3) {
-                // Демонстрация полиморфизма и instanceof (13 баллов)
+                
                 for (Person p : hospitalList) {
-                    p.performDuty(); // Полиморфный вызов
+                    p.performDuty(); 
 
-                    if (p instanceof Doctor) { // instanceof check [cite: 69]
-                        ((Doctor) p).writePrescription(); // Downcasting [cite: 70]
+                    if (p instanceof Doctor) { 
+                        ((Doctor) p).writePrescription();
                     }
                 }
             } else if (choice == 4) break;
