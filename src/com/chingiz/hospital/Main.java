@@ -1,31 +1,46 @@
 package com.chingiz.hospital;
 
+import java.util.ArrayList;
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("=== HOSPITAL MANAGEMENT SYSTEM ===");
+        // ArrayList<ParentType> (7 баллов)
+        ArrayList<Person> hospitalList = new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
 
-        Patient p1 = new Patient(101, "Ivan Ivanov", 25, "A+");
-        Patient p2 = new Patient(102, "Alisa Selezneva", 12, "B-");
-        Doctor d1 = new Doctor(1, "Dr. House", "Diagnostics", 15);
-        Appointment app1 = new Appointment(501, "Ivan Ivanov", "Dr. House", "2025-12-25");
+        while (true) { // Консольное меню (5 баллов)
+            System.out.println("\n--- Hospital Management System ---");
+            System.out.println("1. Add Doctor");
+            System.out.println("2. Add Nurse");
+            System.out.println("3. View All (Polymorphism)");
+            System.out.println("4. Exit");
+            System.out.print("Choice: ");
 
-        System.out.println("\n--- INITIAL STATE ---");
-        System.out.println(p1);
-        System.out.println(d1);
-        System.out.println(app1);
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // очистка буфера
 
-        System.out.println("\n--- TESTING GETTERS ---");
-        System.out.println("Patient name: " + p1.getFullName());
-        System.out.println("Doctor specialization: " + d1.getSpecialization());
+            if (choice == 1) {
+                System.out.print("Name: "); String name = scanner.nextLine();
+                System.out.print("Age: "); int age = scanner.nextInt();
+                scanner.nextLine();
+                System.out.print("Specialization: "); String spec = scanner.nextLine();
+                hospitalList.add(new Doctor(name, age, spec));
+            } else if (choice == 2) {
+                System.out.print("Name: "); String name = scanner.nextLine();
+                System.out.print("Age: "); int age = scanner.nextInt();
+                System.out.print("Shift Hours: "); int shift = scanner.nextInt();
+                hospitalList.add(new Nurse(name, age, shift));
+            } else if (choice == 3) {
+                // Демонстрация полиморфизма и instanceof (13 баллов)
+                for (Person p : hospitalList) {
+                    p.performDuty(); // Полиморфный вызов
 
-        System.out.println("\n--- TESTING SETTERS ---");
-        p1.setAge(26);
-        System.out.println("Updated Patient 1: " + p1);
-
-        System.out.println("\n--- TESTING LOGIC METHODS ---");
-        System.out.println(p2.getFullName() + " is minor: " + p2.isMinor());
-        app1.reschedule("2026-01-01");
-
-        System.out.println("\n=== Program Complete ===");
+                    if (p instanceof Doctor) { // instanceof check [cite: 69]
+                        ((Doctor) p).writePrescription(); // Downcasting [cite: 70]
+                    }
+                }
+            } else if (choice == 4) break;
+        }
     }
 }

@@ -1,26 +1,20 @@
 package com.chingiz.hospital;
 
-public class Doctor {
-    private int doctorId;
-    private String name;
-    private String specialization; // Это поле должно
-    private int experienceYears;
+public class Doctor extends Person { // Наследование (5 баллов)
+    private String specialization;
 
-    public Doctor(int doctorId, String name, String specialization, int experienceYears) {
-        this.doctorId = doctorId;
-        this.name = name;
+    public Doctor(String name, int age, String specialization) {
+        super(name, age); // Использование super() (5 баллов)
         this.specialization = specialization;
-        this.experienceYears = experienceYears;
     }
 
-    public String getSpecialization() {
-        return specialization;
+    @Override // Переопределение (5 баллов)
+    public void performDuty() {
+        System.out.println("Doctor " + name + " (Specialization: " + specialization + ") is treating patients.");
     }
 
-    public String getName() { return name; }
-
-    @Override
-    public String toString() {
-        return "Doctor{Name='" + name + "', Specialization='" + specialization + "'}";
+    // Специфический метод для демонстрации casting
+    public void writePrescription() {
+        System.out.println("Doctor " + name + " is writing a prescription.");
     }
 }
