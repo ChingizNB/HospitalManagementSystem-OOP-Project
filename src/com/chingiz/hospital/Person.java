@@ -22,12 +22,12 @@ public class Person {
         }
     }
 
-    // Первый метод для переопределения
+    
     public void performDuty() {
         System.out.println("Person is performing general hospital tasks.");
     }
 
-    // Второй метод для переопределения (обязательно по пункту 15 в PDF)
+    
     @Override
     public String toString() {
         return "Person [Name: " + name + ", Age: " + age + "]";
