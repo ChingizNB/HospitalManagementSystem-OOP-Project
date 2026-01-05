@@ -8,8 +8,13 @@ public class Nurse extends Person {
         this.shiftHours = shiftHours;
     }
 
-    @Override
+    @Override // Переопределение 1
     public void performDuty() {
-        System.out.println("Nurse " + name + " is assisting doctors during a " + shiftHours + "-hour shift.");
+        System.out.println("Nurse " + name + " is assisting with a " + shiftHours + "-hour shift.");
+    }
+
+    @Override // Переопределение 2
+    public String toString() {
+        return "Nurse: " + name + " | Shift: " + shiftHours + " hours | Age: " + age;
     }
 }
