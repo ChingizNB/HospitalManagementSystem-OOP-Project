@@ -1,4 +1,4 @@
-package com.chingiz.hospital;
+package com.chingiz.hospital.model;
 
 public class Patient {
     private int patientId;
@@ -30,7 +30,7 @@ public class Patient {
     public void setBloodType(String bloodType) { this.bloodType = bloodType; }
 
     public boolean isMinor() {
-        return age < 18; // Возвращает true, если пациент несовершеннолетний
+        return age < 18;
     }
 
     public String getAgeCategory() {
