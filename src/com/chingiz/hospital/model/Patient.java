@@ -1,46 +1,42 @@
-package com.chingiz.hospital.model;
+package com.chingiz.hospital.model; // должно быть так
+
+import java.time.LocalDate;
 
 public class Patient {
     private int patientId;
-    private String fullName;
+    private String name;
     private int age;
-    private String bloodType;
+    private String diagnosis;
+    private LocalDate admissionDate;
 
-    public Patient(int patientId, String fullName, int age, String bloodType) {
+    // Конструктор
+    public Patient(int patientId, String name, int age, String diagnosis, LocalDate admissionDate) {
         this.patientId = patientId;
-        this.fullName = fullName;
+        this.name = name;
         this.age = age;
-        this.bloodType = bloodType;
+        this.diagnosis = diagnosis;
+        this.admissionDate = admissionDate;
     }
 
-    public Patient() {
-        this.fullName = "Unknown";
-    }
-
+    // Геттеры и сеттеры
     public int getPatientId() { return patientId; }
     public void setPatientId(int patientId) { this.patientId = patientId; }
 
-    public String getFullName() { return fullName; }
-    public void setFullName(String fullName) { this.fullName = fullName; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
     public int getAge() { return age; }
     public void setAge(int age) { this.age = age; }
 
-    public String getBloodType() { return bloodType; }
-    public void setBloodType(String bloodType) { this.bloodType = bloodType; }
+    public String getDiagnosis() { return diagnosis; }
+    public void setDiagnosis(String diagnosis) { this.diagnosis = diagnosis; }
 
-    public boolean isMinor() {
-        return age < 18;
-    }
-
-    public String getAgeCategory() {
-        if (age < 12) return "Child";
-        if (age < 60) return "Adult";
-        return "Senior";
-    }
+    public LocalDate getAdmissionDate() { return admissionDate; }
+    public void setAdmissionDate(LocalDate admissionDate) { this.admissionDate = admissionDate; }
 
     @Override
     public String toString() {
-        return "Patient{ID=" + patientId + ", Name='" + fullName + "', Age=" + age + ", Blood='" + bloodType + "'}";
+        return "ID: " + patientId + ", Name: " + name + ", Age: " + age +
+                ", Diagnosis: " + diagnosis + ", Admission Date: " + admissionDate;
     }
 }

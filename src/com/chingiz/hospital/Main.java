@@ -1,10 +1,15 @@
 package com.chingiz.hospital;
 
-import com.chingiz.hospital.menu.*;
+import com.chingiz.hospital.menu.HospitalMenu;
+import com.chingiz.hospital.menu.Menu;
 
 public class Main {
     public static void main(String[] args) {
-        Menu menu = new HospitalMenu(); // [cite: 363]
-        menu.run(); // [cite: 363]
+        System.out.println("=== HOSPITAL MANAGEMENT SYSTEM ===");
+        System.out.println("Week 7-8: JDBC & PostgreSQL Integration");
+        System.out.println("=======================================\n");
+
+        Menu menu = new HospitalMenu();
+        menu.run();
     }
 }
