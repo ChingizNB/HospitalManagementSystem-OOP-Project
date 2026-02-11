@@ -1,231 +1,221 @@
 package com.chingiz.hospital.database;
 
 import com.chingiz.hospital.model.Patient;
+
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PatientDAO {
 
-    // ========== CREATE ==========
-    public boolean insertPatient(Patient patient) {
+    // ===== CREATE =====
+    public boolean insertPatient(Patient p) {
         String sql = "INSERT INTO patient (name, age, diagnosis, admission_date) VALUES (?, ?, ?, ?)";
-        Connection connection = DatabaseConnection.getConnection();
-        if (connection == null) return false;
+        Connection con = DatabaseConnection.getConnection();
+        if (con == null) return false;
 
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, patient.getName());
-            statement.setInt(2, patient.getAge());
-            statement.setString(3, patient.getDiagnosis());
-            statement.setDate(4, Date.valueOf(patient.getAdmissionDate()));
+        try {
+            PreparedStatement st = con.prepareStatement(sql);
+            st.setString(1, p.getName());
+            st.setInt(2, p.getAge());
+            st.setString(3, p.getDiagnosis());
+            st.setDate(4, Date.valueOf(p.getAdmissionDate()));
 
-            int rowsInserted = statement.executeUpdate();
-            return rowsInserted > 0;
+            return st.executeUpdate() > 0;
 
-        } catch (SQLException e) {
-            System.out.println("❌ Ошибка при добавлении пациента: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Ошибка добавления: " + e.getMessage());
             return false;
         } finally {
-            DatabaseConnection.closeConnection(connection);
+            DatabaseConnection.closeConnection(con);
         }
     }
 
-    // ========== READ ALL ==========
+    // ===== READ ALL =====
     public List<Patient> getAllPatients() {
-        List<Patient> patients = new ArrayList<>();
-        String sql = "SELECT * FROM patient ORDER BY patient_id";
-        Connection connection = DatabaseConnection.getConnection();
-        if (connection == null) return patients;
-
-        try (PreparedStatement statement = connection.prepareStatement(sql);
-             ResultSet resultSet = statement.executeQuery()) {
-
-            while (resultSet.next()) {
-                Patient patient = extractPatientFromResultSet(resultSet);
-                patients.add(patient);
-            }
-
-        } catch (SQLException e) {
-            System.out.println("❌ Ошибка при получении пациентов: " + e.getMessage());
-        } finally {
-            DatabaseConnection.closeConnection(connection);
-        }
-        return patients;
+        return getList("SELECT * FROM patient ORDER BY patient_id");
     }
 
-    // ========== UPDATE ==========
-    public boolean updatePatient(Patient patient) {
-        String sql = "UPDATE patient SET name = ?, age = ?, diagnosis = ?, admission_date = ? WHERE patient_id = ?";
-        Connection connection = DatabaseConnection.getConnection();
-        if (connection == null) return false;
+    // ===== UPDATE =====
+    public boolean updatePatient(Patient p) {
+        String sql = "UPDATE patient SET name=?, age=?, diagnosis=?, admission_date=? WHERE patient_id=?";
+        Connection con = DatabaseConnection.getConnection();
+        if (con == null) return false;
 
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, patient.getName());
-            statement.setInt(2, patient.getAge());
-            statement.setString(3, patient.getDiagnosis());
-            statement.setDate(4, Date.valueOf(patient.getAdmissionDate()));
-            statement.setInt(5, patient.getPatientId());
+        try {
+            PreparedStatement st = con.prepareStatement(sql);
+            st.setString(1, p.getName());
+            st.setInt(2, p.getAge());
+            st.setString(3, p.getDiagnosis());
+            st.setDate(4, Date.valueOf(p.getAdmissionDate()));
+            st.setInt(5, p.getPatientId());
 
-            int rowsUpdated = statement.executeUpdate();
-            return rowsUpdated > 0;
+            return st.executeUpdate() > 0;
 
-        } catch (SQLException e) {
-            System.out.println("❌ Ошибка при обновлении пациента: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Ошибка обновления: " + e.getMessage());
             return false;
         } finally {
-            DatabaseConnection.closeConnection(connection);
+            DatabaseConnection.closeConnection(con);
         }
     }
 
-    // ========== DELETE ==========
-    public boolean deletePatient(int patientId) {
-        String sql = "DELETE FROM patient WHERE patient_id = ?";
-        Connection connection = DatabaseConnection.getConnection();
-        if (connection == null) return false;
+    // ===== DELETE =====
+    public boolean deletePatient(int id) {
+        String sql = "DELETE FROM patient WHERE patient_id=?";
+        Connection con = DatabaseConnection.getConnection();
+        if (con == null) return false;
 
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, patientId);
+        try {
+            PreparedStatement st = con.prepareStatement(sql);
+            st.setInt(1, id);
+            return st.executeUpdate() > 0;
 
-            int rowsDeleted = statement.executeUpdate();
-            return rowsDeleted > 0;
-
-        } catch (SQLException e) {
-            System.out.println("❌ Ошибка при удалении пациента: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Ошибка удаления: " + e.getMessage());
             return false;
         } finally {
-            DatabaseConnection.closeConnection(connection);
+            DatabaseConnection.closeConnection(con);
         }
     }
 
-    // ========== GET BY ID ==========
-    public Patient getPatientById(int patientId) {
-        String sql = "SELECT * FROM patient WHERE patient_id = ?";
-        Connection connection = DatabaseConnection.getConnection();
-        if (connection == null) return null;
+    // ===== GET BY ID =====
+    public Patient getPatientById(int id) {
+        String sql = "SELECT * FROM patient WHERE patient_id=?";
+        Connection con = DatabaseConnection.getConnection();
+        if (con == null) return null;
 
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, patientId);
+        try {
+            PreparedStatement st = con.prepareStatement(sql);
+            st.setInt(1, id);
+            ResultSet rs = st.executeQuery();
 
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    return extractPatientFromResultSet(resultSet);
-                }
+            if (rs.next()) {
+                return extract(rs);
             }
 
-        } catch (SQLException e) {
-            System.out.println("❌ Ошибка при поиске пациента: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Ошибка поиска: " + e.getMessage());
         } finally {
-            DatabaseConnection.closeConnection(connection);
+            DatabaseConnection.closeConnection(con);
         }
         return null;
     }
 
-    // ========== SEARCH BY NAME (ILIKE) ==========
+    // ===== SEARCH =====
     public List<Patient> searchByName(String name) {
-        List<Patient> patients = new ArrayList<>();
-        String sql = "SELECT * FROM patient WHERE name ILIKE ? ORDER BY name";
-        Connection connection = DatabaseConnection.getConnection();
-        if (connection == null) return patients;
-
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, "%" + name + "%");
-
-            try (ResultSet resultSet = statement.executeQuery()) {
-                while (resultSet.next()) {
-                    patients.add(extractPatientFromResultSet(resultSet));
-                }
-            }
-
-        } catch (SQLException e) {
-            System.out.println("❌ Ошибка при поиске по имени: " + e.getMessage());
-        } finally {
-            DatabaseConnection.closeConnection(connection);
-        }
-        return patients;
+        return getListWithParam(
+                "SELECT * FROM patient WHERE name ILIKE ? ORDER BY name",
+                "%" + name + "%"
+        );
     }
 
-    // ========== SEARCH BY AGE RANGE ==========
-    public List<Patient> searchByAgeRange(int minAge, int maxAge) {
-        List<Patient> patients = new ArrayList<>();
+    public List<Patient> searchByAgeRange(int min, int max) {
+        List<Patient> list = new ArrayList<>();
         String sql = "SELECT * FROM patient WHERE age BETWEEN ? AND ? ORDER BY age";
-        Connection connection = DatabaseConnection.getConnection();
-        if (connection == null) return patients;
+        Connection con = DatabaseConnection.getConnection();
+        if (con == null) return list;
 
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, minAge);
-            statement.setInt(2, maxAge);
+        try {
+            PreparedStatement st = con.prepareStatement(sql);
+            st.setInt(1, min);
+            st.setInt(2, max);
+            ResultSet rs = st.executeQuery();
 
-            try (ResultSet resultSet = statement.executeQuery()) {
-                while (resultSet.next()) {
-                    patients.add(extractPatientFromResultSet(resultSet));
-                }
+            while (rs.next()) {
+                list.add(extract(rs));
             }
 
-        } catch (SQLException e) {
-            System.out.println("❌ Ошибка при поиске по возрасту: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Ошибка поиска: " + e.getMessage());
         } finally {
-            DatabaseConnection.closeConnection(connection);
+            DatabaseConnection.closeConnection(con);
         }
-        return patients;
+        return list;
     }
 
-    // ========== SEARCH BY DIAGNOSIS ==========
-    public List<Patient> searchByDiagnosis(String diagnosis) {
-        List<Patient> patients = new ArrayList<>();
-        String sql = "SELECT * FROM patient WHERE diagnosis ILIKE ? ORDER BY admission_date";
-        Connection connection = DatabaseConnection.getConnection();
-        if (connection == null) return patients;
-
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, "%" + diagnosis + "%");
-
-            try (ResultSet resultSet = statement.executeQuery()) {
-                while (resultSet.next()) {
-                    patients.add(extractPatientFromResultSet(resultSet));
-                }
-            }
-
-        } catch (SQLException e) {
-            System.out.println("❌ Ошибка при поиске по диагнозу: " + e.getMessage());
-        } finally {
-            DatabaseConnection.closeConnection(connection);
-        }
-        return patients;
+    public List<Patient> searchByDiagnosis(String d) {
+        return getListWithParam(
+                "SELECT * FROM patient WHERE diagnosis ILIKE ? ORDER BY admission_date",
+                "%" + d + "%"
+        );
     }
 
-    // ========== SEARCH BY MIN AGE ==========
-    public List<Patient> searchByMinAge(int minAge) {
-        List<Patient> patients = new ArrayList<>();
+    public List<Patient> searchByMinAge(int age) {
+        List<Patient> list = new ArrayList<>();
         String sql = "SELECT * FROM patient WHERE age >= ? ORDER BY age DESC";
-        Connection connection = DatabaseConnection.getConnection();
-        if (connection == null) return patients;
+        Connection con = DatabaseConnection.getConnection();
+        if (con == null) return list;
 
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, minAge);
+        try {
+            PreparedStatement st = con.prepareStatement(sql);
+            st.setInt(1, age);
+            ResultSet rs = st.executeQuery();
 
-            try (ResultSet resultSet = statement.executeQuery()) {
-                while (resultSet.next()) {
-                    patients.add(extractPatientFromResultSet(resultSet));
-                }
+            while (rs.next()) {
+                list.add(extract(rs));
             }
 
-        } catch (SQLException e) {
-            System.out.println("❌ Ошибка при поиске по минимальному возрасту: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Ошибка поиска: " + e.getMessage());
         } finally {
-            DatabaseConnection.closeConnection(connection);
+            DatabaseConnection.closeConnection(con);
         }
-        return patients;
+        return list;
     }
 
-    // ========== ВСПОМОГАТЕЛЬНЫЙ МЕТОД ==========
-    private Patient extractPatientFromResultSet(ResultSet resultSet) throws SQLException {
+    // ===== ОБЩИЙ МЕТОД ДЛЯ SELECT =====
+    private List<Patient> getList(String sql) {
+        List<Patient> list = new ArrayList<>();
+        Connection con = DatabaseConnection.getConnection();
+        if (con == null) return list;
+
+        try {
+            PreparedStatement st = con.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+
+            while (rs.next()) {
+                list.add(extract(rs));
+            }
+
+        } catch (Exception e) {
+            System.out.println("Ошибка получения данных: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(con);
+        }
+        return list;
+    }
+
+    private List<Patient> getListWithParam(String sql, String param) {
+        List<Patient> list = new ArrayList<>();
+        Connection con = DatabaseConnection.getConnection();
+        if (con == null) return list;
+
+        try {
+            PreparedStatement st = con.prepareStatement(sql);
+            st.setString(1, param);
+            ResultSet rs = st.executeQuery();
+
+            while (rs.next()) {
+                list.add(extract(rs));
+            }
+
+        } catch (Exception e) {
+            System.out.println("Ошибка поиска: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(con);
+        }
+        return list;
+    }
+
+    // ===== ВСПОМОГАТЕЛЬНЫЙ =====
+    private Patient extract(ResultSet rs) throws SQLException {
         return new Patient(
-                resultSet.getInt("patient_id"),
-                resultSet.getString("name"),
-                resultSet.getInt("age"),
-                resultSet.getString("diagnosis"),
-                resultSet.getDate("admission_date").toLocalDate()
+                rs.getInt("patient_id"),
+                rs.getString("name"),
+                rs.getInt("age"),
+                rs.getString("diagnosis"),
+                rs.getDate("admission_date").toLocalDate()
         );
     }
 }
